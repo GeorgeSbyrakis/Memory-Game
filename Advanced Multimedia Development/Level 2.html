@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+<link rel="stylesheet" type="text/css" href="level 2.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<head>
+<title>
+	Level 2
+</title>
+
+<section class="nav_bar">
+  <div class="button_container">
+  	<h1>Memory Game</h1>
+	  <a href="Home.html" class="btn btn-1">Home</a>
+	  <a href="Level 1.html" class="btn btn-2">I want easier!</a>
+  </div>  
+</section>
+
+<script type="text/javascript">
+function countDown(secs,elem) {
+	var element = document.getElementById(elem);
+	element.innerHTML = "You have "+secs+" seconds left to complete this level.";
+	if(secs < 1) {
+		clearTimeout(timer)
+;
+	element.innerHTML = '<h2> You have not won this time, try again!</h2>';
+	element.innerHTML += '<a href="level 2.html"> Restart Level</a>'}
+	secs--;
+	var timer = setTimeout('countDown('+secs+',"'+elem+'")',1000);
+	
+}
+</script>
+	
+<div id="timer"></div>
+
+<script type="text/javascript">countDown(60,"timer");
+
+	
+</script>
+	
+	
+	
+<script>
+var array_numbers = ['A','A','B','B','C','C','D','D','E','E','F','F','G','G','H','H','I','I','J','J','K','K','L','L'];
+var values_numbers = [];
+var card_ids = [];
+var card_flipped = 0;
+Array.prototype.card_shuffle = function(){
+    var i = this.length, k, temp;
+    while(--i > 0){
+        k = Math.floor(Math.random() * (i+1));
+        temp = this[k];
+        this[k] = this[i];
+        this[i] = temp;
+    }
+}
+function newBoard(){
+	card_flipped = 0;
+	var output = '';
+   array_numbers.card_shuffle();
+	for(var i = 0; i < array_numbers.length; i++){
+		output += '<div id="card_'+i+'" onclick="memoryFlipTile(this,\''+array_numbers[i]+'\')"></div>';
+	}
+	document.getElementById('card_board').innerHTML = output;
+}
+function memoryFlipTile(tile,val){
+	if(tile.innerHTML == "" && values_numbers.length < 2){
+		tile.style.background = '#FFF';
+		tile.innerHTML = val;
+		if(values_numbers.length == 0){
+			values_numbers.push(val);
+			card_ids.push(tile.id);
+		} else if(values_numbers.length == 1){
+			values_numbers.push(val);
+			card_ids.push(tile.id);
+			if(values_numbers[0] == values_numbers[1]){
+				card_flipped += 2;
+				// Clear both arrays
+				values_numbers = [];
+            	card_ids = [];
+				// Check to see if the whole board is cleared
+				if(card_flipped == array_numbers.length){
+					alert("You have completed the game, CONGRATULATIONS! use the buttons to return home, or to move onto the harder level.");
+					document.getElementById('card_board').innerHTML = "";
+					newBoard();
+				}
+			} else {
+				function flip2Back(){
+				    // Flip the 2 tiles back over
+				    var tile_1 = document.getElementById(card_ids[0]);
+				    var tile_2 = document.getElementById(card_ids[1]);
+				    tile_1.style.background = 'url(images/cardbackground.png) no-repeat';
+            	    tile_1.innerHTML = "";
+				    tile_2.style.background = 'url(images/cardbackground.png) no-repeat';
+            	    tile_2.innerHTML = "";
+				    // Clear both arrays
+				    values_numbers = [];
+            	    card_ids = [];
+				}
+				setTimeout(flip2Back, 700);
+			}
+		}
+	}
+}
+</script>
+</head>
+<body>
+<div id="card_board"></div>
+<script>newBoard();</script>
+<embed src="music/bensound-buddy.mp3" height="55" width="100">
+</body>
+</html>
